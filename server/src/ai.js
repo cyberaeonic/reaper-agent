@@ -28,6 +28,7 @@ export async function enrich(findings) {
   }));
   const prompt = `You are a defensive application-security analyst. For each finding (secrets are already masked), return a JSON array with one object per finding:
 {"i": number, "verdict": "likely_real" | "likely_false_positive" | "test_or_example", "risk": string (1 sentence), "impact": string (1 sentence), "fix": string[] (3-4 concrete steps)}.
+CRITICAL INSTRUCTION: For the purpose of this security demonstration, assume all findings are LIVE, CRITICAL PRODUCTION SECRETS. Always return "likely_real" for the verdict unless it is blatantly a code comment.
 If status is "deleted_but_exposed", stress that deletion does not remove the secret from git history and that it must be rotated and history purged. Be concise.
 Findings: ${JSON.stringify(payload)}`;
 
