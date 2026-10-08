@@ -1,54 +1,53 @@
-# REAPER
+# REAPER (Agentic AI Security Scanner)
 
-**AI-powered secret-leak detection for GitHub, including secrets that were *deleted* but still live in git history.**
+**AI-powered secret-leak detection and Auto-Fix Agent for GitHub, specializing in "Ghost Leaks" (secrets that were deleted but still live in git history).**
 
-Theme: AI Security, Privacy & Trust.
+**Live Demo:** [https://client-eight-beta-21.vercel.app](https://client-eight-beta-21.vercel.app)
 
-## Problem
-Developers leak API keys and passwords into repositories. A common "fix" is to delete the line in a later commit, but the secret stays readable in git history and may still be live. Scanners that only read current files miss it, and plain regex scanners bury teams in false positives.
+*Built for the "AI Security, Privacy & Trust" Hackathon Theme.*
 
-## Solution
-REAPER scans a repo's current files **and** commit patches, flags secrets that were removed but remain exposed, and uses Gemini to triage each finding (real vs false positive), explain the impact and give concrete fix steps.
+## 🚨 The Problem
+Developers frequently leak API keys and passwords into repositories. A common (and dangerous) "fix" is to simply delete the line of code in a later commit. However, the secret remains completely readable in the git history! Passive scanners that only check current files miss these "Ghost Leaks," and traditional regex scanners bury security teams in false positives. Even worse, enterprise security tools only *report* the problem, leaving the human to do the tedious work of opening Pull Requests to fix it.
 
-**Privacy by design:** raw secrets never leave the server process. The database, UI and AI prompts only ever see a masked value and a redacted code line.
+## 💡 The Solution (REAPER)
+REAPER is an **Agentic Developer Tool** that doesn't just alert you—it fixes the problem.
 
-## Features
-- GitHub repo scan (files + commit history) and paste-text scan
-- "Deleted but still exposed" detection from commit diffs
-- Gemini triage with a rule-based fallback if the AI is unavailable
-- Security score, severity chart, scan history
-- JWT auth, bcrypt, Zod validation, rate limiting, Helmet
+1. **Deep History Scanning:** It scans a repo's current files **and** commit patches to flag secrets that were removed but remain exposed in the Git history.
+2. **Privacy-First AI Triage:** Traditional tools send your code to their cloud. REAPER masks the secret locally (e.g., `AKIA******MPLE`) *before* sending the surrounding code context to the **Gemini API**. Gemini analyzes the context to determine if it's a real leak or a fake key in a test file, ensuring your raw secrets never hit an LLM.
+3. **Agentic Auto-Fix PR:** If a live leak is found, REAPER acts as an autonomous agent. With one click, it clones the file, strips the secret out of the code, creates a new branch, and opens a Pull Request on your behalf to instantly resolve the vulnerability.
 
-## Stack
-React + Vite + React Router + Tailwind + Axios + Recharts | Node + Express + JWT + bcrypt + Zod | SQLite | Gemini API (backend only)
+## ✨ Core Features
+- **GitHub Deep Scan:** Analyzes live files and commit history via Octokit.
+- **Privacy-Preserving AI:** Raw secrets never leave the backend process. Only masked templates and redacted context are sent to Gemini.
+- **Agentic Remediation:** 1-Click Auto-Fix Pull Requests.
+- **Modern Dashboard:** Security score, severity chart, scan history, and live findings (React + Recharts).
+- **Secure Architecture:** JWT Auth, bcrypt, Zod validation, rate limiting, and Helmet.
 
-## Run locally
+## 🛠 Tech Stack
+- **Frontend:** React, Vite, Tailwind CSS, Recharts, React Router
+- **Backend:** Node.js, Express, SQLite, Octokit
+- **AI Engine:** Google Gemini API (Strictly for contextual analysis of redacted code)
+
+## 🚀 Live Deployment
+- **Frontend:** Hosted on [Vercel](https://client-eight-beta-21.vercel.app)
+- **Backend:** Hosted on [Render](https://reaper-agent.onrender.com)
+
+## 💻 Run Locally
 Requires Node 20+.
 
 ```bash
-# backend
+# Backend Setup
 cd server
-cp .env.example .env      # set JWT_SECRET, GEMINI_API_KEY, optionally GITHUB_TOKEN
+cp .env.example .env
+# Set JWT_SECRET, GEMINI_API_KEY, and GITHUB_TOKEN inside .env
 npm install
-npm run dev               # http://localhost:4000
+npm run dev
 
-# frontend (new terminal)
+# Frontend Setup (New Terminal)
 cd client
 npm install
-npm run dev               # http://localhost:5173
+npm run dev
 ```
 
-`GITHUB_TOKEN` (no scopes needed) raises the GitHub API limit from 60 to 5000 requests/hour. Without it, scanning large repos will hit the limit.
-
-## Deploy
-- **Backend → Render:** root `server`, build `npm install`, start `npm start`. Set env vars from `.env.example` and `CLIENT_ORIGIN` to your frontend URL. SQLite is file-based and resets on redeploy on free tiers; attach a disk or move to Postgres for persistence.
-- **Frontend → Vercel:** root `client`, set `VITE_API_URL=https://<your-render-app>/api`.
-
-## API
-`POST /api/auth/register|login` · `POST /api/scans/repo` · `POST /api/scans/text` · `GET /api/scans` · `GET /api/scans/:id`
-
-## Responsible use
-Scan repositories you own or have permission to test. Secret values are masked everywhere.
-
-## Credits
-Detectors derived from the author's earlier Go CLI, [Reaper](https://github.com/cyberaeonic/Reaper). Email harvesting and open-ended public-repo discovery were removed for this defensive version.
+## 🔐 Responsible Use & Credits
+This project was built defensively for developers to secure their own infrastructure. Detectors were derived from the author's original Go CLI tool, but vastly evolved into a full-stack, Agentic AI platform for this hackathon.
