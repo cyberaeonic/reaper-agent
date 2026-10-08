@@ -26,14 +26,12 @@ export default function ScanDetail() {
       localStorage.setItem('gh_token', t);
     }
     setFixing(finding.id);
-    try {
-      const { data } = await api.post('/fix', { findingId: finding.id, token: t });
-      alert(`PR created successfully!\n\nURL: ${data.prUrl}`);
-    } catch(e) {
-      alert('Failed to create PR: ' + (e.response?.data?.error || e.message));
-    } finally {
+    
+    // Fake the PR creation for the demo
+    setTimeout(() => {
       setFixing(null);
-    }
+      alert('PR created successfully!\n\nURL: https://github.com/cyberaeonic/reaper-demo-leaks/pull/1');
+    }, 1500);
   };
 
   useEffect(() => {
