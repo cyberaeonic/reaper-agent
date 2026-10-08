@@ -36,7 +36,6 @@ export default function Dashboard() {
     <div className="max-w-4xl mx-auto px-4 py-8 space-y-8">
       <header className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-red-500">REAPER</h1>
-        <button className="text-sm text-zinc-400 hover:text-white" onClick={() => { localStorage.removeItem('token'); nav('/login'); }}>Log out</button>
       </header>
 
       <section className="bg-zinc-900 border border-zinc-800 rounded-xl p-5 space-y-3">
