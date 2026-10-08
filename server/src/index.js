@@ -106,7 +106,7 @@ app.get('/api/scans/:id', auth, (req, res) => {
 });
 
 app.post('/api/fix', auth, wrap(async (req, res) => {
-  const { findingId } = z.object({ findingId: z.number() }).parse(req.body);
+  const { findingId, token } = z.object({ findingId: z.number(), token: z.string() }).parse(req.body);
   const finding = db.prepare('SELECT f.*, s.target FROM findings f JOIN scans s ON f.scan_id = s.id WHERE f.id = ? AND s.user_id = ?').get(findingId, req.user.id);
 
   if (!finding) return res.status(404).json({ error: 'Finding not found' });
@@ -114,7 +114,7 @@ app.post('/api/fix', auth, wrap(async (req, res) => {
 
   const [owner, repo] = finding.target.split('/');
   const { Octokit } = await import('@octokit/rest');
-  const octo = new Octokit({ auth: process.env.GITHUB_TOKEN });
+  const octo = new Octokit({ auth: token });
 
   const { data: repoData } = await octo.repos.get({ owner, repo });
   const branch = repoData.default_branch;

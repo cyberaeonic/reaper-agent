@@ -18,9 +18,16 @@ export default function ScanDetail() {
   const [fixing, setFixing] = useState(null);
 
   const handleFix = async (finding) => {
+    let t = githubToken;
+    if (!t) {
+      t = prompt('Enter a GitHub Personal Access Token (repo scope) to create the PR:');
+      if (!t) return;
+      setGithubToken(t);
+      localStorage.setItem('gh_token', t);
+    }
     setFixing(finding.id);
     try {
-      const { data } = await api.post('/fix', { findingId: finding.id });
+      const { data } = await api.post('/fix', { findingId: finding.id, token: t });
       alert(`PR created successfully!\n\nURL: ${data.prUrl}`);
     } catch(e) {
       alert('Failed to create PR: ' + (e.response?.data?.error || e.message));
