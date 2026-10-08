@@ -7,7 +7,7 @@ const SEV = { CRITICAL: 'bg-red-600', HIGH: 'bg-orange-500', MEDIUM: 'bg-yellow-
 const VERDICT = {
   likely_real: ['Likely real', 'text-red-400'],
   likely_false_positive: ['Likely false positive', 'text-green-400'],
-  test_or_example: ['Test / example', 'text-sky-400'],
+  test_or_example: ['Mock Secret / Benign', 'text-sky-400'],
   needs_review: ['Needs review', 'text-yellow-400'],
 };
 
