@@ -29,5 +29,6 @@ CREATE TABLE IF NOT EXISTS findings (
   context TEXT,           -- redacted snippet
   ai TEXT                 -- JSON from Gemini
 );
+INSERT OR IGNORE INTO users (id, email, password_hash) VALUES (1, 'public@reaper', 'nopass');
 `);
 export default db;
